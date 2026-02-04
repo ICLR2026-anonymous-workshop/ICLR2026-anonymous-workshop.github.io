@@ -10,392 +10,366 @@
     <meta name="description" content="SE-RL: Self-Evolutional Reinforcement Learning Framework using Large Language Models for Algorithmic Trading">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:image" content="img/overview.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1920">
-    <meta property="og:image:height" content="1080">
     <meta property="og:type" content="website" />
     <meta property="og:title" content="SE-RL: LLM as an Excellent Reinforcement Learning Researcher" />
-    <meta property="og:description" content="We propose SE-RL, a Self-Evolutional Reinforcement Learning framework that leverages Large Language Models to automatically design and optimize RL algorithms for order execution in dynamic financial markets."/>
+    <meta property="og:description" content="We propose SE-RL, a Self-Evolutional Reinforcement Learning framework."/>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SE-RL: LLM as an Excellent Reinforcement Learning Researcher" />
-    <meta name="twitter:description" content="We propose SE-RL, a Self-Evolutional Reinforcement Learning framework that leverages Large Language Models to automatically design and optimize RL algorithms for order execution in dynamic financial markets."/>
-    <meta name="twitter:image" content="img/overview.png" />
-
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
 
+    <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 
     <style>
+        /* Global Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 1%;
-            background-color: #fafafa;
+            background-color: #f4f6f8;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
         }
-        
-        .container-lg {
-            max-width: 1200px;
-            margin: auto;
+
+        /* Main Container */
+        .container {
+            max-width: 1100px; /* Optimal reading width */
+            margin: 40px auto;
             background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.05);
         }
-        
+
+        /* Typography */
         h2.title {
-            font-size: 2.2em;
+            font-size: 2.4em;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: #1a1a2e;
-        }
-        
-        h3 {
-            font-size: 1.5em;
-            font-weight: 600;
-            margin-top: 30px;
             margin-bottom: 15px;
+            color: #1a1a2e;
+            text-align: center; /* Explicitly centered */
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 20px;
             color: #16213e;
             border-bottom: 2px solid #e94560;
             padding-bottom: 8px;
             display: inline-block;
         }
-        
+
         h4 {
-            font-size: 1.2em;
+            font-size: 1.25em;
             font-weight: 600;
             color: #16213e;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
+        /* Centering Helpers */
+        .text-center-custom {
+            text-align: center;
+        }
+        
+        .section-title-wrapper {
+            text-align: center;
+        }
+
+        /* Header Section */
         .author-list {
-            font-size: 1.1em;
-            margin-bottom: 10px;
+            font-size: 1.2em;
+            margin-bottom: 15px;
         }
-        
-        .author-list a {
-            color: #0f3460;
-            text-decoration: none;
-        }
-        
-        .author-list a:hover {
-            color: #e94560;
-            text-decoration: underline;
-        }
-        
+
         .venue {
             font-size: 1.1em;
             color: #e94560;
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 5px;
         }
-        
+
+        /* Buttons */
         .button-row {
-            margin: 25px 0;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        
+
         .external-link {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 24px;
             background-color: #16213e;
             color: white !important;
-            border-radius: 25px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
-        
+
         .external-link:hover {
             background-color: #e94560;
-            text-decoration: none;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+            text-decoration: none;
         }
-        
+
         .external-link .icon {
             margin-right: 8px;
+            font-size: 1.1em;
         }
-        
+
+        /* Abstract */
         .abstract-box {
             background-color: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid #e94560;
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 5px solid #e94560;
             margin: 20px 0;
         }
-        
+
         .abstract-box p {
             text-align: justify;
-            line-height: 1.8;
-            color: #333;
+            margin: 0;
         }
-        
+
+        /* Images & Figures */
         .method-overview {
             text-align: center;
             margin: 30px 0;
         }
-        
+
         .method-overview img {
             max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-        
-        .highlight-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        
-        .highlight-box h3 {
-            color: white;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-        }
-        
-        .formula-box {
-            background-color: #f0f4f8;
-            padding: 15px 25px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: 'Times New Roman', serif;
+
+        .figure-caption {
+            font-size: 0.95em;
+            color: #666;
             text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            padding: 0 20px;
         }
-        
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
         table.results-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95em;
+            background: white;
+            min-width: 600px; /* Prevents squashing on small screens */
         }
-        
+
         table.results-table th {
             background-color: #16213e;
             color: white;
+            padding: 14px 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        table.results-table td {
             padding: 12px 15px;
             text-align: center;
+            border-bottom: 1px solid #eee;
+            color: #444;
         }
-        
-        table.results-table td {
-            padding: 10px 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        
+
         table.results-table tr:nth-child(even) {
             background-color: #f8f9fa;
         }
-        
+
         table.results-table tr:hover {
-            background-color: #e8f4f8;
+            background-color: #f0f4f8;
         }
-        
+
         table.results-table tr.highlight-row {
-            background-color: #d4edda !important;
+            background-color: #e3fcec !important;
             font-weight: 600;
+            border-left: 3px solid #28a745;
         }
         
+        table.results-table tr.highlight-row td {
+            color: #155724;
+        }
+
+        /* Lists */
         .contribution-list {
             list-style: none;
             padding-left: 0;
         }
-        
+
         .contribution-list li {
-            padding: 12px 15px;
-            margin: 10px 0;
-            background-color: #f8f9fa;
+            padding: 15px 20px;
+            margin: 12px 0;
+            background-color: #fdfdfd;
+            border: 1px solid #eee;
             border-radius: 8px;
             border-left: 4px solid #e94560;
             line-height: 1.6;
         }
-        
-        .contribution-list li strong {
-            color: #16213e;
-        }
-        
-        .figure-caption {
-            font-size: 0.9em;
-            color: #666;
-            text-align: center;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
+
+        /* Code & Bibtex */
         .bibtex-box {
             background-color: #1a1a2e;
             color: #a8dadc;
             padding: 20px;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            font-family: 'Consolas', 'Monaco', monospace;
             font-size: 0.85em;
             overflow-x: auto;
-            white-space: pre-wrap;
+            white-space: pre;
+            text-align: left;
+            border: 1px solid #333;
         }
-        
+
+        .algorithm-box {
+            background-color: #fff;
+            padding: 0;
+            border-radius: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .algorithm-box pre {
+            margin: 0;
+            padding: 25px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            background-color: #fcfcfc;
+            border: none;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+
+        /* Layout Grids */
         .section-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #e94560, transparent);
-            margin: 40px 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+            margin: 50px 0;
         }
-        
+
         .teaser-section {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 35px;
+            border-radius: 12px;
             margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(22, 33, 62, 0.2);
         }
-        
+
         .teaser-section h3 {
             color: #a8dadc;
             border-bottom-color: #e94560;
+            margin-top: 0;
         }
-        
-        .metric-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            background-color: #e94560;
-            color: white;
-            border-radius: 15px;
-            font-size: 0.85em;
-            margin: 3px;
-        }
-        
-        .improvement-tag {
-            color: #28a745;
-            font-weight: 600;
-        }
-        
+
         .two-column {
             display: flex;
             gap: 30px;
             flex-wrap: wrap;
+            margin-top: 20px;
         }
-        
+
         .two-column > div {
             flex: 1;
             min-width: 300px;
         }
-        
+
         .problem-card {
             background-color: rgba(255,255,255,0.1);
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
-            margin: 10px 0;
+            height: 100%; /* Equal height */
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
+
         .problem-card h4 {
             color: #e94560;
             margin-top: 0;
         }
-        
-        .intro-figures {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .intro-figures > div {
-            flex: 1;
-            min-width: 250px;
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .intro-figures img {
-            width: 100%;
-            border-radius: 5px;
-        }
-        
-        .intro-figures p {
-            font-size: 0.85em;
-            margin-top: 10px;
-            color: #ccc;
-        }
-        
-        .algorithm-box {
-            background-color: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            text-align: left;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .algorithm-box pre {
-            margin: 0;
-            font-size: 0.88em;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-        
+
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
         }
-        
+
         .results-grid > div {
             text-align: center;
         }
-        
+
         .results-grid img {
             max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            border: 1px solid #eee;
         }
-        
-        @media (max-width: 768px) {
-            .container-lg {
-                padding: 20px;
-            }
-            
-            h2.title {
-                font-size: 1.6em;
-            }
-            
-            .two-column {
-                flex-direction: column;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
+
+        .improvement-tag {
+            font-size: 0.85em;
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
         }
+
+        /* Utilities */
+        .mt-4 { margin-top: 25px; }
+        .mb-4 { margin-bottom: 25px; }
     </style>
-    
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
 </head>
 
 <body>
-    <div class="container-lg text-center" id="main">
+    <!-- Use standard container, not container-lg from BS4, and remove text-center from wrapper -->
+    <div class="container" id="main">
+        
         <!-- Title Section -->
         <div class="row">
-            <h2 class="col-md-12 text-center title">
-                <b style="color: #e94560;">SE-RL</b>: Large Language Model as an Excellent<br>
-                Reinforcement Learning Researcher
-            </h2>
-            <p class="col-md-12 text-center" style="font-size: 1.1em; color: #666; margin-top: -10px;">
-                in both Single-Agent and Multi-Agent Scenarios
-            </p>
+            <div class="col-md-12 text-center-custom">
+                <h2 class="title">
+                    <b style="color: #e94560;">SE-RL</b>: Large Language Model as an Excellent<br>
+                    Reinforcement Learning Researcher
+                </h2>
+                <p style="font-size: 1.2em; color: #666; margin-top: 5px;">
+                    in both Single-Agent and Multi-Agent Scenarios
+                </p>
+            </div>
         </div>
 
         <!-- Authors -->
-        <div class="row text-center author-list">
+        <div class="row text-center-custom author-list">
             <div class="col-md-12">
-                <p style="color: #888; font-style: italic;">Anonymous Authors</p>
+                <p style="color: #555; font-weight: 500;">Anonymous Authors</p>
             </div>
             <div class="col-md-12 venue">
                 ICLR 2026 Submission
@@ -403,7 +377,7 @@
         </div>
 
         <!-- Buttons -->
-        <div class="row text-center button-row">
+        <div class="button-row">
             <a href="#" class="external-link">
                 <span class="icon"><i class="ai ai-arxiv"></i></span>
                 <span>arXiv</span>
@@ -426,24 +400,26 @@
 
         <!-- Teaser/Motivation Section -->
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 teaser-section">
-                <h3>🚀 Why SE-RL?</h3>
-                <div class="two-column" style="text-align: left;">
-                    <div class="problem-card">
-                        <h4>Problem 1: Slow RL Research Speed</h4>
-                        <p>Compared to rapid advances in CV, NLP, and LLMs, reinforcement learning algorithm innovation has been significantly slower. SE-RL automates the research process using LLMs.</p>
-                        <div style="text-align: center; margin-top: 15px;">
-                            <img src="img/intro_speed.png" alt="RL Research Speed Analysis" style="max-width: 100%; border-radius: 8px;">
-                        </div>
-                        <p style="font-size: 0.85em; color: #aaa; margin-top: 10px;">Analysis shows RL has the lowest research growth trajectory across AI subfields.</p>
+            <div class="col-md-12">
+                <div class="teaser-section">
+                    <div class="section-title-wrapper">
+                        <h3>🚀 Why SE-RL?</h3>
                     </div>
-                    <div class="problem-card">
-                        <h4>Problem 2: Unrealistic Market Assumptions</h4>
-                        <p>Existing RL methods rely on static market assumptions, ignoring the market impact of the agent's own actions. We build dynamic multi-agent simulators.</p>
-                        <div style="text-align: center; margin-top: 15px;">
-                            <img src="img/intro_impact.png" alt="Market Impact Analysis" style="max-width: 100%; border-radius: 8px;">
+                    <div class="two-column">
+                        <div class="problem-card">
+                            <h4>Problem 1: Slow RL Research Speed</h4>
+                            <p>Compared to rapid advances in CV, NLP, and LLMs, reinforcement learning algorithm innovation has been significantly slower. SE-RL automates the research process using LLMs.</p>
+                            <div style="text-align: center; margin-top: 15px;">
+                                <img src="img/intro_speed.png" alt="RL Research Speed Analysis" style="max-width: 100%; border-radius: 8px;">
+                            </div>
                         </div>
-                        <p style="font-size: 0.85em; color: #aaa; margin-top: 10px;">Orders significantly impact market prices - an effect that cannot be ignored.</p>
+                        <div class="problem-card">
+                            <h4>Problem 2: Unrealistic Market Assumptions</h4>
+                            <p>Existing RL methods rely on static market assumptions, ignoring the market impact of the agent's own actions. We build dynamic multi-agent simulators.</p>
+                            <div style="text-align: center; margin-top: 15px;">
+                                <img src="img/intro_impact.png" alt="Market Impact Analysis" style="max-width: 100%; border-radius: 8px;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -452,7 +428,9 @@
         <!-- Abstract -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>Abstract</h3>
+                <div class="section-title-wrapper">
+                    <h3>Abstract</h3>
+                </div>
                 <div class="abstract-box">
                     <p>
                         In the quantitative finance area, particularly in order execution, reinforcement learning (RL) has shown great promise due to its ability to interact with market environments based on real data. However, traditional RL methods suffer from <strong>slow research speed</strong> and rely on <strong>static market assumptions</strong>, which do not consider the impact of the agent's execution action on the environment. To address these, we propose a <strong>Self-Evolutional single-agent/multi-agent Reinforcement Learning (SE-RL)</strong> framework. The framework utilizes a Large Language Model (LLM) to design various RL algorithm modules, such as agent model design, reward function, profiling, communication, and state imagination. SE-RL continuously improves the accuracy of LLM-generated RL algorithms through a <strong>Dual-Level Enhancement Kit (DEK)</strong> at both high-level (prompt refinement) and low-level (parameter fine-tuning). Additionally, we use a multi-agent system to simulate dynamic financial markets, accounting for the impact of order executions on market dynamics. Comprehensive experiments on <strong>200 realistic stock datasets</strong> demonstrate that our proposed framework outperforms current state-of-the-art baselines.
@@ -466,31 +444,33 @@
         <!-- Method Overview -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>
-                    <span style="color: #e94560;">SE-RL</span> Framework Overview
-                </h3>
+                <div class="section-title-wrapper">
+                    <h3><span style="color: #e94560;">SE-RL</span> Framework Overview</h3>
+                </div>
                 <div class="method-overview">
                     <img src="img/overview.png" alt="SE-RL Framework Overview">
                 </div>
                 <p class="figure-caption">
-                    <strong>Figure:</strong> The SE-RL framework consists of two core loops: (1) an <span style="color: #e94560;">outer loop</span> for enhancing the LLM's research capabilities through the Dual-Level Enhancement Kit, and (2) an <span style="color: #667eea;">inner loop</span> for training an execution agent in both static and dynamic environments with hybrid loss rebalancing. The LLM designs multiple modules including LLM4Reward, LLM4Agent Architecture, LLM4Profiling, LLM4Communication, and LLM4Imagine.
+                    <strong>Figure 1:</strong> The SE-RL framework consists of two core loops: (1) an <span style="color: #e94560;">outer loop</span> for enhancing the LLM's research capabilities through the Dual-Level Enhancement Kit, and (2) an <span style="color: #667eea;">inner loop</span> for training an execution agent in both static and dynamic environments with hybrid loss rebalancing.
                 </p>
             </div>
         </div>
 
         <!-- Key Contributions -->
         <div class="row">
-            <div class="col-md-10 col-md-offset-1" style="text-align: left;">
-                <h3>Key Contributions</h3>
+            <div class="col-md-10 col-md-offset-1">
+                <div class="section-title-wrapper">
+                    <h3>Key Contributions</h3>
+                </div>
                 <ul class="contribution-list">
                     <li>
-                        <strong>🧠 SE-RL Framework:</strong> The first automated RL research framework that uses an LLM to design complete RL algorithms, integrating the Dual-Level Enhancement Kit (DEK) for continuous improvement of LLM research capability through prompt refinement and weight optimization.
+                        <strong>🧠 SE-RL Framework:</strong> The first automated RL research framework that uses an LLM to design complete RL algorithms, integrating the Dual-Level Enhancement Kit (DEK) for continuous improvement of LLM research capability.
                     </li>
                     <li>
-                        <strong>🌐 Dynamic Market Simulator:</strong> A multi-agent system that realistically models market impact through agent-based order book updates, including market makers, informed traders, and noise traders with diverse behavioral profiles.
+                        <strong>🌐 Dynamic Market Simulator:</strong> A multi-agent system that realistically models market impact through agent-based order book updates, including market makers, informed traders, and noise traders.
                     </li>
                     <li>
-                        <strong>⚖️ Hybrid Environment Training:</strong> A novel training paradigm that balances learning from static historical data while accounting for dynamic market impact through adaptive loss rebalancing: \(\mathcal{L}_{\text{rebalance}} = \alpha\mathcal{L}_s + \beta\mathcal{L}_d\)
+                        <strong>⚖️ Hybrid Environment Training:</strong> A novel training paradigm that balances learning from static historical data while accounting for dynamic market impact through adaptive loss rebalancing: \(\mathcal{L}_{\text{rebalance}} = \alpha\mathcal{L}_s + \beta\mathcal{L}_d\).
                     </li>
                     <li>
                         <strong>📈 State-of-the-Art Performance:</strong> Comprehensive experiments on 200 stocks from CSI100 and NASDAQ100 demonstrate significant improvements over existing baselines with 28.4% improvement in Price Advantage.
@@ -504,31 +484,31 @@
         <!-- Dual-Level Enhancement Kit -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>Dual-Level Enhancement Kit (DEK)</h3>
+                <div class="section-title-wrapper">
+                    <h3>Dual-Level Enhancement Kit (DEK)</h3>
+                </div>
                 <div class="method-overview">
                     <img src="img/dek.png" alt="DEK Workflow" style="max-width: 85%;">
                 </div>
                 <p class="figure-caption">
-                    <strong>Figure:</strong> High-level enhancement workflow showing the macro-micro instruction refinement process with instruction buffer for stability.
+                    <strong>Figure 2:</strong> High-level enhancement workflow showing the macro-micro instruction refinement process with instruction buffer for stability.
                 </p>
                 
-                <div class="two-column" style="text-align: left; margin-top: 30px;">
+                <div class="two-column">
                     <div>
-                        <h4 style="color: #667eea;">🔼 High-Level Enhancement</h4>
+                        <h4 style="color: #667eea;"><i class="fa fa-arrow-up"></i> High-Level Enhancement</h4>
                         <ul>
-                            <li><strong>Macro-Micro Refine:</strong> Hierarchical prompt generation for overall task context and specific module goals</li>
-                            <li><strong>In-Context Reward Learning:</strong> Learn from historical prompt-reward pairs to infer successful patterns</li>
-                            <li><strong>Instruction Buffer:</strong> Experience replay mechanism for prompt evolution stability</li>
-                            <li><strong>Instruction Evolution:</strong> LLM analyzes returns and automatically adjusts instructions</li>
+                            <li><strong>Macro-Micro Refine:</strong> Hierarchical prompt generation for overall task context and specific module goals.</li>
+                            <li><strong>In-Context Reward Learning:</strong> Learn from historical prompt-reward pairs to infer successful patterns.</li>
+                            <li><strong>Instruction Buffer:</strong> Experience replay mechanism for prompt evolution stability.</li>
                         </ul>
                     </div>
                     <div>
-                        <h4 style="color: #764ba2;">🔽 Low-Level Enhancement</h4>
+                        <h4 style="color: #764ba2;"><i class="fa fa-arrow-down"></i> Low-Level Enhancement</h4>
                         <ul>
-                            <li><strong>STE Gradient Flow:</strong> Straight-Through Estimator for end-to-end differentiable optimization</li>
-                            <li><strong>LoRA Fine-tuning:</strong> Efficient parameter updates with minimal learning rate (1×10⁻⁵)</li>
-                            <li><strong>Rollback Mechanism:</strong> Checkpoint-based updates ensuring monotonic improvement</li>
-                            <li><strong>Gradient Approximation:</strong> \(\nabla_\phi J \approx -(PA - b) \cdot \nabla_\phi \log p_\phi(c|\text{prompt})\)</li>
+                            <li><strong>STE Gradient Flow:</strong> Straight-Through Estimator for end-to-end differentiable optimization.</li>
+                            <li><strong>LoRA Fine-tuning:</strong> Efficient parameter updates with minimal learning rate (1×10⁻⁵).</li>
+                            <li><strong>Gradient Approximation:</strong> \(\nabla_\phi J \approx -(PA - b) \cdot \nabla_\phi \log p_\phi(c|\text{prompt})\).</li>
                         </ul>
                     </div>
                 </div>
@@ -540,143 +520,149 @@
         <!-- Results Section -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>📊 Experimental Results</h3>
+                <div class="section-title-wrapper">
+                    <h3>📊 Experimental Results</h3>
+                </div>
                 
-                <h4 style="margin-top: 25px; color: #16213e;">CSI100 Dataset (China A-shares)</h4>
-                <table class="results-table">
-                    <thead>
-                        <tr>
-                            <th>Method</th>
-                            <th>PA (bps) ↑</th>
-                            <th>PA-std (bps) ↓</th>
-                            <th>Win Rate ↑</th>
-                            <th>GLR ↑</th>
-                            <th>AFI ↓</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>TWAP</td>
-                            <td>-0.12</td>
-                            <td><strong>3.12</strong></td>
-                            <td>0.49</td>
-                            <td>0.97</td>
-                            <td>0.00</td>
-                        </tr>
-                        <tr>
-                            <td>VWAP</td>
-                            <td>-3.29</td>
-                            <td>4.87</td>
-                            <td>0.39</td>
-                            <td>0.78</td>
-                            <td>0.04</td>
-                        </tr>
-                        <tr>
-                            <td>DDQN</td>
-                            <td>-1.21</td>
-                            <td>7.09</td>
-                            <td>0.47</td>
-                            <td>0.99</td>
-                            <td>0.05</td>
-                        </tr>
-                        <tr>
-                            <td>PPO</td>
-                            <td>-0.98</td>
-                            <td>7.01</td>
-                            <td>0.52</td>
-                            <td>0.92</td>
-                            <td>0.03</td>
-                        </tr>
-                        <tr>
-                            <td>HALOP</td>
-                            <td>2.89</td>
-                            <td>6.12</td>
-                            <td>0.65</td>
-                            <td>1.12</td>
-                            <td>0.07</td>
-                        </tr>
-                        <tr>
-                            <td>MacMic</td>
-                            <td>3.31</td>
-                            <td>6.23</td>
-                            <td>0.72</td>
-                            <td>1.37</td>
-                            <td>0.02</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>SE-RL (Ours)</strong></td>
-                            <td><strong>4.25</strong> <span class="improvement-tag">+0.94</span></td>
-                            <td><strong>5.12</strong> <span class="improvement-tag">-1.11</span></td>
-                            <td><strong>0.99</strong> <span class="improvement-tag">+0.27</span></td>
-                            <td><strong>1.63</strong> <span class="improvement-tag">+0.26</span></td>
-                            <td><strong>0.00</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h4>CSI100 Dataset (China A-shares)</h4>
+                <div class="table-responsive">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>PA (bps) ↑</th>
+                                <th>PA-std (bps) ↓</th>
+                                <th>Win Rate ↑</th>
+                                <th>GLR ↑</th>
+                                <th>AFI ↓</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TWAP</td>
+                                <td>-0.12</td>
+                                <td><strong>3.12</strong></td>
+                                <td>0.49</td>
+                                <td>0.97</td>
+                                <td>0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VWAP</td>
+                                <td>-3.29</td>
+                                <td>4.87</td>
+                                <td>0.39</td>
+                                <td>0.78</td>
+                                <td>0.04</td>
+                            </tr>
+                            <tr>
+                                <td>DDQN</td>
+                                <td>-1.21</td>
+                                <td>7.09</td>
+                                <td>0.47</td>
+                                <td>0.99</td>
+                                <td>0.05</td>
+                            </tr>
+                            <tr>
+                                <td>PPO</td>
+                                <td>-0.98</td>
+                                <td>7.01</td>
+                                <td>0.52</td>
+                                <td>0.92</td>
+                                <td>0.03</td>
+                            </tr>
+                            <tr>
+                                <td>HALOP</td>
+                                <td>2.89</td>
+                                <td>6.12</td>
+                                <td>0.65</td>
+                                <td>1.12</td>
+                                <td>0.07</td>
+                            </tr>
+                            <tr>
+                                <td>MacMic</td>
+                                <td>3.31</td>
+                                <td>6.23</td>
+                                <td>0.72</td>
+                                <td>1.37</td>
+                                <td>0.02</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>SE-RL (Ours)</strong></td>
+                                <td><strong>4.25</strong> <span class="improvement-tag">+0.94</span></td>
+                                <td><strong>5.12</strong> <span class="improvement-tag">-1.11</span></td>
+                                <td><strong>0.99</strong> <span class="improvement-tag">+0.27</span></td>
+                                <td><strong>1.63</strong> <span class="improvement-tag">+0.26</span></td>
+                                <td><strong>0.00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <h4 style="margin-top: 35px; color: #16213e;">NASDAQ100 Dataset (US Market)</h4>
-                <table class="results-table">
-                    <thead>
-                        <tr>
-                            <th>Method</th>
-                            <th>PA (bps) ↑</th>
-                            <th>PA-std (bps) ↓</th>
-                            <th>Win Rate ↑</th>
-                            <th>GLR ↑</th>
-                            <th>AFI ↓</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>TWAP</td>
-                            <td>-0.19</td>
-                            <td>4.31</td>
-                            <td>0.49</td>
-                            <td>1.01</td>
-                            <td>0.00</td>
-                        </tr>
-                        <tr>
-                            <td>VWAP</td>
-                            <td>-2.89</td>
-                            <td>4.72</td>
-                            <td>0.35</td>
-                            <td>0.79</td>
-                            <td>0.02</td>
-                        </tr>
-                        <tr>
-                            <td>PPO</td>
-                            <td>-1.20</td>
-                            <td>6.79</td>
-                            <td>0.46</td>
-                            <td>0.96</td>
-                            <td>0.04</td>
-                        </tr>
-                        <tr>
-                            <td>HALOP</td>
-                            <td>2.75</td>
-                            <td>5.87</td>
-                            <td>0.63</td>
-                            <td>1.13</td>
-                            <td>0.05</td>
-                        </tr>
-                        <tr>
-                            <td>MacMic</td>
-                            <td>3.14</td>
-                            <td>5.69</td>
-                            <td>0.74</td>
-                            <td>1.28</td>
-                            <td>0.01</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>SE-RL (Ours)</strong></td>
-                            <td><strong>4.86</strong> <span class="improvement-tag">+1.72</span></td>
-                            <td><strong>3.97</strong> <span class="improvement-tag">-1.72</span></td>
-                            <td><strong>0.90</strong> <span class="improvement-tag">+0.16</span></td>
-                            <td><strong>1.47</strong> <span class="improvement-tag">+0.19</span></td>
-                            <td><strong>0.00</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h4 class="mt-4">NASDAQ100 Dataset (US Market)</h4>
+                <div class="table-responsive">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>PA (bps) ↑</th>
+                                <th>PA-std (bps) ↓</th>
+                                <th>Win Rate ↑</th>
+                                <th>GLR ↑</th>
+                                <th>AFI ↓</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TWAP</td>
+                                <td>-0.19</td>
+                                <td>4.31</td>
+                                <td>0.49</td>
+                                <td>1.01</td>
+                                <td>0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VWAP</td>
+                                <td>-2.89</td>
+                                <td>4.72</td>
+                                <td>0.35</td>
+                                <td>0.79</td>
+                                <td>0.02</td>
+                            </tr>
+                            <tr>
+                                <td>PPO</td>
+                                <td>-1.20</td>
+                                <td>6.79</td>
+                                <td>0.46</td>
+                                <td>0.96</td>
+                                <td>0.04</td>
+                            </tr>
+                            <tr>
+                                <td>HALOP</td>
+                                <td>2.75</td>
+                                <td>5.87</td>
+                                <td>0.63</td>
+                                <td>1.13</td>
+                                <td>0.05</td>
+                            </tr>
+                            <tr>
+                                <td>MacMic</td>
+                                <td>3.14</td>
+                                <td>5.69</td>
+                                <td>0.74</td>
+                                <td>1.28</td>
+                                <td>0.01</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>SE-RL (Ours)</strong></td>
+                                <td><strong>4.86</strong> <span class="improvement-tag">+1.72</span></td>
+                                <td><strong>3.97</strong> <span class="improvement-tag">-1.72</span></td>
+                                <td><strong>0.90</strong> <span class="improvement-tag">+0.16</span></td>
+                                <td><strong>1.47</strong> <span class="improvement-tag">+0.19</span></td>
+                                <td><strong>0.00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -685,64 +671,68 @@
         <!-- Ablation Study -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>🔬 Ablation Study</h3>
-                <p style="text-align: left; margin-bottom: 20px;">
+                <div class="section-title-wrapper">
+                    <h3>🔬 Ablation Study</h3>
+                </div>
+                <p>
                     We systematically evaluate the contribution of each component in SE-RL. The complete framework achieves 4.25bps PA, representing an 88% improvement over the base RL implementation.
                 </p>
-                <table class="results-table">
-                    <thead>
-                        <tr>
-                            <th>High-Level</th>
-                            <th>Low-Level</th>
-                            <th>Dynamic Env</th>
-                            <th>Hybrid Training</th>
-                            <th>PA (bps) ↑</th>
-                            <th>Win Rate ↑</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>2.26</td>
-                            <td>0.65</td>
-                        </tr>
-                        <tr>
-                            <td>✓</td>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>2.96 <span class="improvement-tag">+0.70</span></td>
-                            <td>0.73 <span class="improvement-tag">+0.08</span></td>
-                        </tr>
-                        <tr>
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td>✗</td>
-                            <td>✗</td>
-                            <td>3.34 <span class="improvement-tag">+0.38</span></td>
-                            <td>0.75 <span class="improvement-tag">+0.02</span></td>
-                        </tr>
-                        <tr>
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td>✗</td>
-                            <td>3.87 <span class="improvement-tag">+0.53</span></td>
-                            <td>0.80 <span class="improvement-tag">+0.05</span></td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td>✓</td>
-                            <td><strong>4.25</strong> <span class="improvement-tag">+0.38</span></td>
-                            <td><strong>0.99</strong> <span class="improvement-tag">+0.19</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>High-Level</th>
+                                <th>Low-Level</th>
+                                <th>Dynamic Env</th>
+                                <th>Hybrid Training</th>
+                                <th>PA (bps) ↑</th>
+                                <th>Win Rate ↑</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>2.26</td>
+                                <td>0.65</td>
+                            </tr>
+                            <tr>
+                                <td>✓</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>2.96 <span class="improvement-tag">+0.70</span></td>
+                                <td>0.73</td>
+                            </tr>
+                            <tr>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>3.34 <span class="improvement-tag">+0.38</span></td>
+                                <td>0.75</td>
+                            </tr>
+                            <tr>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✗</td>
+                                <td>3.87 <span class="improvement-tag">+0.53</span></td>
+                                <td>0.80</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td><strong>4.25</strong> <span class="improvement-tag">+0.38</span></td>
+                                <td><strong>0.99</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -751,16 +741,18 @@
         <!-- Module Performance & Training Analysis -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>📈 DEK Enhancement & Training Analysis</h3>
+                <div class="section-title-wrapper">
+                    <h3>📈 DEK Enhancement & Training Analysis</h3>
+                </div>
                 
                 <div class="results-grid">
                     <div>
                         <img src="img/module_performance.png" alt="Module Performance">
-                        <p class="figure-caption">DEK significantly improves all LLM-generated module performance (Reward × Success Rate)</p>
+                        <p class="figure-caption"><strong>Figure 3:</strong> DEK significantly improves all LLM-generated module performance (Reward × Success Rate)</p>
                     </div>
                     <div>
                         <img src="img/training_curves.png" alt="Training Curves">
-                        <p class="figure-caption">Training reward trajectories in different environments with varying data proportions</p>
+                        <p class="figure-caption"><strong>Figure 4:</strong> Training reward trajectories in different environments with varying data proportions</p>
                     </div>
                 </div>
             </div>
@@ -771,7 +763,9 @@
         <!-- Market Impact Analysis -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>🎯 Performance Under Different Market Impacts</h3>
+                <div class="section-title-wrapper">
+                    <h3>🎯 Performance Under Different Market Impacts</h3>
+                </div>
                 
                 <div class="results-grid">
                     <div>
@@ -784,7 +778,7 @@
                     </div>
                 </div>
                 
-                <p style="text-align: left; margin-top: 20px;">
+                <p class="mt-4">
                     SE-RL demonstrates <strong>superior performance in high-impact scenarios</strong>, where traditional methods struggle. In the Big-Impact group, SE-RL achieved an extra return of <strong>3.11</strong>, substantially outperforming MacMic (2.29) and ODP (1.83). The agent trained in dynamic environments learns a robust policy that not only optimizes returns but also effectively mitigates execution risk.
                 </p>
             </div>
@@ -795,12 +789,14 @@
         <!-- Comprehensive Performance Validation -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>🏆 Comprehensive Performance Validation</h3>
+                <div class="section-title-wrapper">
+                    <h3>🏆 Comprehensive Performance Validation</h3>
+                </div>
                 <div class="method-overview">
                     <img src="img/comprehensive.png" alt="Comprehensive Validation" style="max-width: 95%;">
                 </div>
                 <p class="figure-caption">
-                    <strong>Figure:</strong> (A) SE-RL converges to the theoretical oracle limit, leaving only irreducible stochastic noise. (B) Cumulative return over time shows consistent outperformance. (C) AFI distribution demonstrates superior risk control. (D) SE-RL exhibits antifragility - performance improves with increased market volatility.
+                    <strong>Figure 5:</strong> (A) SE-RL converges to the theoretical oracle limit. (B) Cumulative return over time shows consistent outperformance. (C) AFI distribution demonstrates superior risk control.
                 </p>
             </div>
         </div>
@@ -810,9 +806,11 @@
         <!-- Algorithm -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>⚙️ Training Algorithm</h3>
+                <div class="section-title-wrapper">
+                    <h3>⚙️ Training Algorithm</h3>
+                </div>
                 <div class="algorithm-box">
-                    <pre><strong>Algorithm: SE-RL Training Scheme</strong>
+<pre><strong>Algorithm: SE-RL Training Scheme</strong>
 
 <span style="color: #888;">Input:</span> Base LLM M, Execution Agent π_init, Static Env E_s, Dynamic Env E_d
 <span style="color: #888;">Metric:</span> Price Advantage PA
@@ -848,7 +846,9 @@
         <!-- Citation -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>📝 Citation</h3>
+                <div class="section-title-wrapper">
+                    <h3>📝 Citation</h3>
+                </div>
                 <div class="bibtex-box">
 @inproceedings{anonymous2026serl,
     title={Large Language Model (LLM) as an Excellent Reinforcement 
@@ -866,15 +866,17 @@
         <!-- Acknowledgements -->
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <h3>Acknowledgements</h3>
-                <p style="text-align: justify; color: #666; line-height: 1.8;">
+                <div class="section-title-wrapper">
+                    <h3>Acknowledgements</h3>
+                </div>
+                <p style="text-align: justify; color: #666; margin-bottom: 40px;">
                     We thank the anonymous reviewers for their valuable feedback. The website template was adapted from <a href="https://reconfusion.github.io/" style="color: #e94560;">ReconFusion</a>.
                 </p>
             </div>
         </div>
 
-        <div style="margin-top: 50px; padding: 20px; background-color: #f8f9fa; border-radius: 10px;">
-            <p style="color: #888; font-size: 0.9em; margin: 0;">
+        <div style="padding: 30px 0; border-top: 1px solid #eee; margin-top: 20px;">
+            <p style="color: #999; font-size: 0.9em; text-align: center;">
                 © 2026 SE-RL Project | Last updated: February 2026
             </p>
         </div>
