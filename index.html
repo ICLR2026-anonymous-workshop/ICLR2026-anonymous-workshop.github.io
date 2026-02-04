@@ -46,7 +46,7 @@
             max-width: 1100px;
             margin: 40px auto;
             background-color: white;
-            padding: 50px 60px; /* 增加内边距，让内容不贴边 */
+            padding: 50px 60px;
             border-radius: 8px;
             box-shadow: 0 4px 25px rgba(0,0,0,0.05);
         }
@@ -54,7 +54,7 @@
         /* Typography */
         h2.title {
             font-size: 2.5em;
-            font-weight: 800; /* 强制特粗 */
+            font-weight: 800;
             margin-bottom: 20px;
             color: #1a1a2e;
             text-align: center;
@@ -70,7 +70,7 @@
         h2.title .subtitle {
             display: block;
             margin-top: 10px;
-            font-size: 0.5em; /* 相对于h2缩小 */
+            font-size: 0.5em;
             font-weight: 500;
             color: #666;
             letter-spacing: normal;
@@ -82,7 +82,7 @@
             margin-top: 40px;
             margin-bottom: 20px;
             color: #16213e;
-            border-bottom: 3px solid #e94560; /* 加粗下划线 */
+            border-bottom: 3px solid #e94560;
             padding-bottom: 8px;
             display: inline-block;
         }
@@ -91,7 +91,7 @@
             font-size: 1.25em;
             font-weight: 700;
             color: #16213e;
-            margin-top: 0; /* 重置顶部边距，由Grid控制 */
+            margin-top: 0;
             margin-bottom: 15px;
         }
         
@@ -149,7 +149,7 @@
             font-size: 1.1em;
         }
 
-        /* Teaser/Motivation Section - 修复对齐问题的核心部分 */
+        /* Teaser/Motivation Section */
         .teaser-section {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
@@ -166,11 +166,10 @@
             margin-bottom: 30px;
         }
 
-        /* 使用 CSS Grid 替代 Flex 解决歪斜问题 */
         .two-column-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 严格平分两列 */
-            gap: 40px; /* 列间距 */
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
             align-items: start;
         }
 
@@ -197,7 +196,7 @@
             margin-top: 15px;
             border-radius: 6px;
             border: 1px solid rgba(255,255,255,0.1);
-            background: white; /* 确保透明图有背景 */
+            background: white;
         }
 
         /* Abstract */
@@ -364,7 +363,7 @@
                 font-size: 1.8em;
             }
             .two-column-grid, .results-grid {
-                grid-template-columns: 1fr; /* 手机端变为单列 */
+                grid-template-columns: 1fr;
                 gap: 20px;
             }
             .external-link {
@@ -378,7 +377,7 @@
 <body>
     <div class="container" id="main">
         
-        <!-- Title Section: 修复了全加粗问题 -->
+        <!-- Title Section -->
         <div class="row">
             <div class="col-md-12">
                 <h2 class="title">
@@ -394,7 +393,7 @@
                 <p style="color: #555; font-weight: 500;">Anonymous Authors</p>
             </div>
             <div class="col-md-12 venue">
-                ICLR 2026 Workshop Submission <!-- 修正了会议名称 -->
+                ICLR 2026 Workshop Submission
             </div>
         </div>
 
@@ -404,7 +403,8 @@
                 <span class="icon"><i class="ai ai-arxiv"></i></span>
                 <span>arXiv</span>
             </a>
-            <a href="#" class="external-link">
+            <!-- Updated Code Link -->
+            <a href="https://github.com/ICLR2026-anonymous-workshop/ICLR2026-anonymous-workshop" class="external-link">
                 <span class="icon"><i class="fa fa-github"></i></span>
                 <span>Code</span>
             </a>
@@ -420,14 +420,13 @@
 
         <div class="section-divider"></div>
 
-        <!-- Teaser/Motivation Section: 修复了布局歪斜 -->
+        <!-- Teaser/Motivation Section -->
         <div class="row">
             <div class="col-md-12">
                 <div class="teaser-section">
                     <div class="section-title-wrapper">
                         <h3>🚀 Why SE-RL?</h3>
                     </div>
-                    <!-- 使用 Grid 布局替代 Flex，确保两列严格对齐 -->
                     <div class="two-column-grid">
                         <div class="problem-card">
                             <h4>Problem 1: Slow RL Research Speed</h4>
