@@ -1,777 +1,1211 @@
 <!DOCTYPE html>
-<html>
-
-<head lang="en">
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SE-RL: LLM as RL Researcher</title>
-
-    <meta name="description" content="SE-RL: Self-Evolutional Reinforcement Learning Framework">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:image" content="img/overview.png">
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="SE-RL: LLM as an Excellent Reinforcement Learning Researcher" />
-    <meta property="og:description" content="We propose SE-RL, a Self-Evolutional Reinforcement Learning framework."/>
-
+    <meta name="description" content="SE-RL: Self-Evolutional Reinforcement Learning Framework using LLMs">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-
     <style>
-        /* Global Styles */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --accent-primary: #6366f1;
+            --accent-secondary: #ec4899;
+            --accent-tertiary: #06b6d4;
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #06b6d4 100%);
+            --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(236, 72, 153, 0.3) 50%, rgba(6, 182, 212, 0.3) 100%);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f8;
-            color: #333;
-            font-size: 16px;
-            line-height: 1.6;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
         }
 
-        /* Main Container */
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            right: -100px;
+            background: var(--accent-primary);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            left: -100px;
+            background: var(--accent-secondary);
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Container */
         .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            background-color: white;
-            padding: 50px 60px;
-            border-radius: 8px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Typography */
-        h2.title {
-            font-size: 2.5em;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: #1a1a2e;
-            text-align: center;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-        }
-        
-        h2.title .highlight {
-            color: #e94560;
-            font-weight: 800;
-        }
-
-        h2.title .subtitle {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.5em;
-            font-weight: 500;
-            color: #666;
-            letter-spacing: normal;
-        }
-
-        h3 {
-            font-size: 1.6em;
-            font-weight: 700;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            color: #16213e;
-            border-bottom: 3px solid #e94560;
-            padding-bottom: 8px;
-            display: inline-block;
-        }
-
-        h4 {
-            font-size: 1.25em;
-            font-weight: 700;
-            color: #16213e;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        
-        .section-title-wrapper {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Header Section */
-        .author-list {
-            font-size: 1.25em;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .venue {
-            font-size: 1.2em;
-            color: #e94560;
-            font-weight: 700;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        /* Buttons */
-        .button-row {
-            margin: 35px 0;
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
         }
 
-        .external-link {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
-            padding: 12px 28px;
-            background-color: #16213e;
-            color: white !important;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .external-link:hover {
-            background-color: #e94560;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(233, 69, 96, 0.3);
-            text-decoration: none;
-        }
-
-        .external-link .icon {
-            margin-right: 10px;
-            font-size: 1.1em;
-        }
-
-        /* Teaser/Motivation Section */
-        .teaser-section {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 12px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(22, 33, 62, 0.15);
-        }
-
-        .teaser-section h3 {
-            color: #a8dadc;
-            border-bottom-color: #e94560;
-            margin-top: 0;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--glass);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
             margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        .two-column-grid {
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-secondary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-title .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* Stats Strip */
+        .stats-strip {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 80px;
+            padding: 40px;
+            background: var(--glass);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.8s ease-out 0.8s both;
         }
 
-        .problem-card {
-            background-color: rgba(255,255,255,0.05);
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            height: 100%;
+        .stat-item {
+            text-align: center;
         }
 
-        .problem-card h4 {
-            color: #e94560;
-            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
-            padding-bottom: 10px;
-        }
-        
-        .problem-card p {
-            font-size: 0.95em;
-            color: #ddd;
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .problem-card img {
-            margin-top: 15px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: white;
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        /* Motivation Cards */
+        .motivation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .motivation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .motivation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .motivation-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .motivation-card:hover::before {
+            opacity: 1;
+        }
+
+        .motivation-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+        }
+
+        .motivation-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .motivation-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .motivation-card img {
+            width: 100%;
+            margin-top: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         /* Abstract */
         .abstract-box {
-            background-color: #f8f9fa;
-            padding: 35px;
-            border-radius: 10px;
-            border-left: 6px solid #e94560;
-            margin: 20px 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .abstract-box::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 8rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            opacity: 0.1;
+            line-height: 1;
         }
 
         .abstract-box p {
-            text-align: justify;
-            margin: 0;
-            font-size: 1.05em;
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
         }
 
-        /* Images & Figures */
-        .method-overview {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .method-overview img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .figure-caption {
-            font-size: 0.95em;
-            color: #666;
-            text-align: center;
-            margin-top: 15px;
-            font-style: italic;
-            padding: 0 30px;
-        }
-
-        /* Results Grid */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin: 30px 0;
-        }
-        
-        .results-grid img {
-            max-width: 100%;
-            border: 1px solid #eee;
-            border-radius: 6px;
-        }
-
-        /* Tables */
-        .table-responsive {
-            overflow-x: auto;
-            margin: 25px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        table.results-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            min-width: 600px;
-        }
-
-        table.results-table th {
-            background-color: #16213e;
-            color: white;
-            padding: 14px 15px;
-            text-align: center;
+        .abstract-box strong {
+            color: var(--text-primary);
             font-weight: 600;
         }
 
-        table.results-table td {
-            padding: 12px 15px;
+        /* Method Overview */
+        .method-image {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
             text-align: center;
-            border-bottom: 1px solid #eee;
-            color: #444;
         }
 
-        table.results-table tr:nth-child(even) {
-            background-color: #f8f9fa;
+        .method-image img {
+            max-width: 100%;
+            border-radius: 12px;
         }
 
-        table.results-table tr.highlight-row {
-            background-color: #e3fcec !important;
+        .figure-caption {
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Contributions */
+        .contributions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .contribution-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .contribution-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateX(8px);
+        }
+
+        .contribution-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .contribution-content h4 {
+            font-size: 1.15rem;
             font-weight: 700;
-            border-left: 4px solid #28a745;
+            margin-bottom: 10px;
         }
 
-        .improvement-tag {
-            font-size: 0.8em;
-            color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 6px;
+        .contribution-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* DEK Section */
+        .dek-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .dek-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        .dek-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
             font-weight: 700;
+            margin-bottom: 20px;
         }
 
-        /* List Items */
-        .contribution-list {
+        .dek-card h4 i {
+            color: var(--accent-primary);
+        }
+
+        .dek-card ul {
             list-style: none;
-            padding-left: 0;
         }
 
-        .contribution-list li {
-            padding: 18px 25px;
-            margin: 15px 0;
-            background-color: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            border-left: 5px solid #e94560;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        .dek-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
-        /* Code Block */
-        .algorithm-box {
-            background-color: #fff;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        .dek-card li:last-child {
+            border-bottom: none;
         }
 
-        .algorithm-box pre {
-            margin: 0;
-            padding: 25px;
-            font-size: 0.9em;
-            line-height: 1.5;
-            background-color: #fcfcfc;
-            border: none;
-            font-family: 'Consolas', 'Monaco', monospace;
+        .dek-card li strong {
+            color: var(--text-primary);
         }
 
-        .bibtex-box {
-            background-color: #1a1a2e;
-            color: #a8dadc;
-            padding: 25px;
-            border-radius: 8px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.9em;
+        /* Results Section */
+        .results-section {
+            background: var(--bg-secondary);
+            border-radius: 32px;
+            padding: 60px;
+            border: 1px solid var(--border-color);
+        }
+
+        .results-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+        }
+
+        .results-table-wrapper {
             overflow-x: auto;
-            white-space: pre;
-            line-height: 1.4;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
         }
 
-        .section-divider {
-            height: 1px;
-            background: #eee;
-            margin: 60px 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
         }
 
-        /* Responsive Fixes */
-        @media (max-width: 768px) {
+        th, td {
+            padding: 18px 20px;
+            text-align: center;
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        td {
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr.highlight {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        tr.highlight td {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        tr.highlight td:first-child {
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .improvement {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        /* Algorithm */
+        .algorithm-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .algorithm-header {
+            background: var(--bg-secondary);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .algorithm-header::before {
+            content: '';
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .window-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .window-dots span:nth-child(1) { background: #ff5f56; }
+        .window-dots span:nth-child(2) { background: #ffbd2e; }
+        .window-dots span:nth-child(3) { background: #27ca40; }
+
+        .algorithm-code {
+            padding: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .algorithm-code .keyword { color: var(--accent-secondary); font-weight: 600; }
+        .algorithm-code .comment { color: var(--text-muted); font-style: italic; }
+        .algorithm-code .function { color: var(--accent-tertiary); }
+        .algorithm-code .variable { color: var(--accent-primary); }
+
+        /* Citation */
+        .citation-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .citation-header {
+            background: var(--bg-tertiary);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .citation-header span {
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: var(--glass);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .citation-code {
+            padding: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
             .container {
-                padding: 30px 20px;
-                width: 95%;
+                padding: 0 20px;
             }
-            h2.title {
-                font-size: 1.8em;
-            }
-            .two-column-grid, .results-grid {
+
+            .motivation-grid,
+            .contributions-grid,
+            .dek-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
-            .external-link {
+
+            .stats-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .results-section {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
                 width: 100%;
                 justify-content: center;
             }
         }
     </style>
 </head>
-
 <body>
-    <div class="container" id="main">
-        
-        <!-- Title Section -->
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="title">
-                    <span class="highlight">SE-RL</span>: Large Language Model as an Excellent Reinforcement Learning Researcher<br>
-                    <span class="subtitle">in both Single-Agent and Multi-Agent Scenarios</span>
-                </h2>
-            </div>
-        </div>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
 
-        <!-- Authors -->
-        <div class="row author-list">
-            <div class="col-md-12">
-                <p style="color: #555; font-weight: 500;">Anonymous Authors</p>
-            </div>
-            <div class="col-md-12 venue">
-                ICLR 2026 Workshop Submission
-            </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            ICLR 2026 Workshop Submission
         </div>
-
-        <!-- Buttons -->
-        <div class="button-row">
-            <a href="#" class="external-link">
-                <span class="icon"><i class="ai ai-arxiv"></i></span>
-                <span>arXiv</span>
+        <h1 class="hero-title">
+            <span class="gradient-text">SE-RL</span><br>
+            LLM as RL Researcher
+        </h1>
+        <p class="hero-subtitle">
+            A Self-Evolutional Reinforcement Learning Framework that leverages Large Language Models to automate RL algorithm design in both Single-Agent and Multi-Agent scenarios.
+        </p>
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-primary">
+                <i class="fa-solid fa-file-pdf"></i>
+                Read Paper
             </a>
-            <!-- Updated Code Link -->
-            <a href="https://github.com/ICLR2026-anonymous-workshop/ICLR2026-anonymous-workshop" class="external-link">
-                <span class="icon"><i class="fa fa-github"></i></span>
-                <span>Code</span>
+            <a href="https://github.com/ICLR2026-anonymous-workshop/ICLR2026-anonymous-workshop" class="btn btn-secondary">
+                <i class="fa-brands fa-github"></i>
+                View Code
             </a>
-            <a href="#" class="external-link">
-                <span class="icon"><i class="fa fa-database"></i></span>
-                <span>Data</span>
-            </a>
-            <a href="#" class="external-link">
-                <span class="icon"><i class="fa fa-file-pdf-o"></i></span>
-                <span>Paper</span>
+            <a href="#" class="btn btn-secondary">
+                <i class="ai ai-arxiv"></i>
+                arXiv
             </a>
         </div>
 
-        <div class="section-divider"></div>
+        <div class="stats-strip">
+            <div class="stat-item">
+                <div class="stat-value">200</div>
+                <div class="stat-label">Stocks Tested</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">99%</div>
+                <div class="stat-label">Win Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">+4.86</div>
+                <div class="stat-label">PA (bps)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">2×</div>
+                <div class="stat-label">Performance Gain</div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Teaser/Motivation Section -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="teaser-section">
-                    <div class="section-title-wrapper">
-                        <h3>🚀 Why SE-RL?</h3>
-                    </div>
-                    <div class="two-column-grid">
-                        <div class="problem-card">
-                            <h4>Problem 1: Slow RL Research Speed</h4>
-                            <p>Compared to rapid advances in CV, NLP, and LLMs, reinforcement learning algorithm innovation has been significantly slower. SE-RL automates the research process using LLMs.</p>
-                            <div style="text-align: center;">
-                                <img src="img/intro_speed.png" alt="RL Research Speed Analysis" style="max-width: 100%; height: auto;">
-                            </div>
-                        </div>
-                        <div class="problem-card">
-                            <h4>Problem 2: Unrealistic Market Assumptions</h4>
-                            <p>Existing RL methods rely on static market assumptions, ignoring the market impact of the agent's own actions. We build dynamic multi-agent simulators.</p>
-                            <div style="text-align: center;">
-                                <img src="img/intro_impact.png" alt="Market Impact Analysis" style="max-width: 100%; height: auto;">
-                            </div>
-                        </div>
-                    </div>
+    <!-- Motivation Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Motivation</span>
+                <h2 class="section-title">Why SE-RL?</h2>
+            </div>
+            <div class="motivation-grid">
+                <div class="motivation-card fade-in">
+                    <div class="motivation-icon">⚡</div>
+                    <h3>Slow RL Research Speed</h3>
+                    <p>Compared to rapid advances in CV, NLP, and LLMs, reinforcement learning algorithm innovation has been significantly slower. SE-RL automates the research process using LLMs, accelerating discovery.</p>
+                    <img src="img/intro_speed.png" alt="RL Research Speed Analysis">
+                </div>
+                <div class="motivation-card fade-in">
+                    <div class="motivation-icon">🎯</div>
+                    <h3>Unrealistic Market Assumptions</h3>
+                    <p>Existing RL methods rely on static market assumptions, ignoring the market impact of the agent's own actions. We build dynamic multi-agent simulators for realistic training.</p>
+                    <img src="img/intro_impact.png" alt="Market Impact Analysis">
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Abstract -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>Abstract</h3>
-                </div>
-                <div class="abstract-box">
-                    <p>
-                        In the quantitative finance area, particularly in order execution, reinforcement learning (RL) has shown great promise due to its ability to interact with market environments based on real data. However, traditional RL methods suffer from <strong>slow research speed</strong> and rely on <strong>static market assumptions</strong>, which do not consider the impact of the agent's execution action on the environment. To address these, we propose a <strong>Self-Evolutional single-agent/multi-agent Reinforcement Learning (SE-RL)</strong> framework. The framework utilizes a Large Language Model (LLM) to design various RL algorithm modules, such as agent model design, reward function, profiling, communication, and state imagination. SE-RL continuously improves the accuracy of LLM-generated RL algorithms through a <strong>Dual-Level Enhancement Kit (DEK)</strong> at both high-level (prompt refinement) and low-level (parameter fine-tuning). Additionally, we use a multi-agent system to simulate dynamic financial markets, accounting for the impact of order executions on market dynamics. Comprehensive experiments on <strong>200 realistic stock datasets</strong> demonstrate that our proposed framework outperforms current state-of-the-art baselines.
-                    </p>
-                </div>
+    <!-- Abstract Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Overview</span>
+                <h2 class="section-title">Abstract</h2>
             </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- Method Overview -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3><span style="color: #e94560;">SE-RL</span> Framework Overview</h3>
-                </div>
-                <div class="method-overview">
-                    <img src="img/overview.png" alt="SE-RL Framework Overview">
-                </div>
-                <p class="figure-caption">
-                    <strong>Figure 1:</strong> The SE-RL framework consists of two core loops: (1) an <span style="color: #e94560;">outer loop</span> for enhancing the LLM's research capabilities through the Dual-Level Enhancement Kit, and (2) an <span style="color: #667eea;">inner loop</span> for training an execution agent in both static and dynamic environments.
+            <div class="abstract-box fade-in">
+                <p>
+                    In the quantitative finance area, particularly in order execution, reinforcement learning (RL) has shown great promise due to its ability to interact with market environments based on real data. However, traditional RL methods suffer from <strong>slow research speed</strong> and rely on <strong>static market assumptions</strong>, which do not consider the impact of the agent's execution action on the environment. To address these, we propose a <strong>Self-Evolutional single-agent/multi-agent Reinforcement Learning (SE-RL)</strong> framework. The framework utilizes a Large Language Model (LLM) to design various RL algorithm modules, such as agent model design, reward function, profiling, communication, and state imagination. SE-RL continuously improves the accuracy of LLM-generated RL algorithms through a <strong>Dual-Level Enhancement Kit (DEK)</strong> at both high-level (prompt refinement) and low-level (parameter fine-tuning). Additionally, we use a multi-agent system to simulate dynamic financial markets, accounting for the impact of order executions on market dynamics. Comprehensive experiments on <strong>200 realistic stock datasets</strong> demonstrate that our proposed framework outperforms current state-of-the-art baselines.
                 </p>
             </div>
         </div>
+    </section>
 
-        <!-- Key Contributions -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>Key Contributions</h3>
-                </div>
-                <ul class="contribution-list">
-                    <li>
-                        <strong>🧠 SE-RL Framework:</strong> The first automated RL research framework that uses an LLM to design complete RL algorithms, integrating the Dual-Level Enhancement Kit (DEK).
-                    </li>
-                    <li>
-                        <strong>🌐 Dynamic Market Simulator:</strong> A multi-agent system that realistically models market impact through agent-based order book updates.
-                    </li>
-                    <li>
-                        <strong>⚖️ Hybrid Environment Training:</strong> A novel training paradigm that balances learning from static historical data while accounting for dynamic market impact through adaptive loss rebalancing.
-                    </li>
-                    <li>
-                        <strong>📈 State-of-the-Art Performance:</strong> Comprehensive experiments on 200 stocks from CSI100 and NASDAQ100 demonstrate significant improvements over existing baselines.
-                    </li>
-                </ul>
+    <!-- Method Overview -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Method</span>
+                <h2 class="section-title">Framework Overview</h2>
+            </div>
+            <div class="method-image fade-in">
+                <img src="img/overview.png" alt="SE-RL Framework Overview">
+                <p class="figure-caption">
+                    <strong>Figure 1:</strong> The SE-RL framework consists of two core loops: (1) an <span style="color: var(--accent-secondary);">outer loop</span> for enhancing the LLM's research capabilities through the Dual-Level Enhancement Kit, and (2) an <span style="color: var(--accent-primary);">inner loop</span> for training an execution agent in both static and dynamic environments.
+                </p>
             </div>
         </div>
+    </section>
 
-        <div class="section-divider"></div>
-
-        <!-- Dual-Level Enhancement Kit -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>Dual-Level Enhancement Kit (DEK)</h3>
-                </div>
-                <div class="method-overview">
-                    <img src="img/dek.png" alt="DEK Workflow" style="max-width: 85%;">
-                </div>
-                
-                <div class="two-column-grid" style="margin-top: 30px;">
-                    <div>
-                        <h4 style="color: #667eea;"><i class="fa fa-arrow-up"></i> High-Level Enhancement</h4>
-                        <ul>
-                            <li><strong>Macro-Micro Refine:</strong> Hierarchical prompt generation for overall task context and specific module goals.</li>
-                            <li><strong>In-Context Reward Learning:</strong> Learn from historical prompt-reward pairs.</li>
-                            <li><strong>Instruction Buffer:</strong> Experience replay mechanism for prompt evolution stability.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: #764ba2;"><i class="fa fa-arrow-down"></i> Low-Level Enhancement</h4>
-                        <ul>
-                            <li><strong>STE Gradient Flow:</strong> Straight-Through Estimator for end-to-end differentiable optimization.</li>
-                            <li><strong>LoRA Fine-tuning:</strong> Efficient parameter updates.</li>
-                            <li><strong>Gradient Approximation:</strong> \(\nabla_\phi J \approx -(PA - b) \cdot \nabla_\phi \log p_\phi(c|\text{prompt})\).</li>
-                        </ul>
+    <!-- Key Contributions -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Highlights</span>
+                <h2 class="section-title">Key Contributions</h2>
+            </div>
+            <div class="contributions-grid">
+                <div class="contribution-card fade-in">
+                    <div class="contribution-number">1</div>
+                    <div class="contribution-content">
+                        <h4>SE-RL Framework</h4>
+                        <p>The first automated RL research framework that uses an LLM to design complete RL algorithms, integrating the Dual-Level Enhancement Kit (DEK).</p>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- Results Section -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>📊 Experimental Results</h3>
+                <div class="contribution-card fade-in">
+                    <div class="contribution-number">2</div>
+                    <div class="contribution-content">
+                        <h4>Dynamic Market Simulator</h4>
+                        <p>A multi-agent system that realistically models market impact through agent-based order book updates.</p>
+                    </div>
                 </div>
-                
-                <h4>CSI100 Dataset (China A-shares)</h4>
-                <div class="table-responsive">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Method</th>
-                                <th>PA (bps) ↑</th>
-                                <th>PA-std (bps) ↓</th>
-                                <th>Win Rate ↑</th>
-                                <th>GLR ↑</th>
-                                <th>AFI ↓</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>TWAP</td>
-                                <td>-0.12</td>
-                                <td><strong>3.12</strong></td>
-                                <td>0.49</td>
-                                <td>0.97</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <td>VWAP</td>
-                                <td>-3.29</td>
-                                <td>4.87</td>
-                                <td>0.39</td>
-                                <td>0.78</td>
-                                <td>0.04</td>
-                            </tr>
-                            <tr>
-                                <td>PPO</td>
-                                <td>-0.98</td>
-                                <td>7.01</td>
-                                <td>0.52</td>
-                                <td>0.92</td>
-                                <td>0.03</td>
-                            </tr>
-                            <tr>
-                                <td>HALOP</td>
-                                <td>2.89</td>
-                                <td>6.12</td>
-                                <td>0.65</td>
-                                <td>1.12</td>
-                                <td>0.07</td>
-                            </tr>
-                            <tr>
-                                <td>MacMic</td>
-                                <td>3.31</td>
-                                <td>6.23</td>
-                                <td>0.72</td>
-                                <td>1.37</td>
-                                <td>0.02</td>
-                            </tr>
-                            <tr class="highlight-row">
-                                <td><strong>SE-RL (Ours)</strong></td>
-                                <td><strong>4.25</strong> <span class="improvement-tag">+0.94</span></td>
-                                <td><strong>5.12</strong> <span class="improvement-tag">-1.11</span></td>
-                                <td><strong>0.99</strong> <span class="improvement-tag">+0.27</span></td>
-                                <td><strong>1.63</strong> <span class="improvement-tag">+0.26</span></td>
-                                <td><strong>0.00</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="contribution-card fade-in">
+                    <div class="contribution-number">3</div>
+                    <div class="contribution-content">
+                        <h4>Hybrid Environment Training</h4>
+                        <p>A novel training paradigm that balances learning from static historical data while accounting for dynamic market impact.</p>
+                    </div>
                 </div>
-
-                <h4 style="margin-top: 40px;">NASDAQ100 Dataset (US Market)</h4>
-                <div class="table-responsive">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Method</th>
-                                <th>PA (bps) ↑</th>
-                                <th>PA-std (bps) ↓</th>
-                                <th>Win Rate ↑</th>
-                                <th>GLR ↑</th>
-                                <th>AFI ↓</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>TWAP</td>
-                                <td>-0.19</td>
-                                <td>4.31</td>
-                                <td>0.49</td>
-                                <td>1.01</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <td>PPO</td>
-                                <td>-1.20</td>
-                                <td>6.79</td>
-                                <td>0.46</td>
-                                <td>0.96</td>
-                                <td>0.04</td>
-                            </tr>
-                            <tr>
-                                <td>MacMic</td>
-                                <td>3.14</td>
-                                <td>5.69</td>
-                                <td>0.74</td>
-                                <td>1.28</td>
-                                <td>0.01</td>
-                            </tr>
-                            <tr class="highlight-row">
-                                <td><strong>SE-RL (Ours)</strong></td>
-                                <td><strong>4.86</strong> <span class="improvement-tag">+1.72</span></td>
-                                <td><strong>3.97</strong> <span class="improvement-tag">-1.72</span></td>
-                                <td><strong>0.90</strong> <span class="improvement-tag">+0.16</span></td>
-                                <td><strong>1.47</strong> <span class="improvement-tag">+0.19</span></td>
-                                <td><strong>0.00</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="contribution-card fade-in">
+                    <div class="contribution-number">4</div>
+                    <div class="contribution-content">
+                        <h4>State-of-the-Art Performance</h4>
+                        <p>Comprehensive experiments on 200 stocks from CSI100 and NASDAQ100 demonstrate significant improvements.</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="section-divider"></div>
-
-        <!-- Ablation Study -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>🔬 Ablation Study</h3>
+    <!-- DEK Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Core Component</span>
+                <h2 class="section-title">Dual-Level Enhancement Kit</h2>
+            </div>
+            <div class="method-image fade-in" style="margin-bottom: 40px;">
+                <img src="img/dek.png" alt="DEK Workflow" style="max-width: 85%;">
+            </div>
+            <div class="dek-grid">
+                <div class="dek-card fade-in">
+                    <h4><i class="fa-solid fa-arrow-up"></i> High-Level Enhancement</h4>
+                    <ul>
+                        <li><strong>Macro-Micro Refine:</strong> Hierarchical prompt generation for overall task context and specific module goals.</li>
+                        <li><strong>In-Context Reward Learning:</strong> Learn from historical prompt-reward pairs for optimization.</li>
+                        <li><strong>Instruction Buffer:</strong> Experience replay mechanism for prompt evolution stability.</li>
+                    </ul>
                 </div>
-                <div class="table-responsive">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>High-Level</th>
-                                <th>Low-Level</th>
-                                <th>Dynamic Env</th>
-                                <th>Hybrid Training</th>
-                                <th>PA (bps) ↑</th>
-                                <th>Win Rate ↑</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>2.26</td>
-                                <td>0.65</td>
-                            </tr>
-                            <tr>
-                                <td>✓</td>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>2.96 <span class="improvement-tag">+0.70</span></td>
-                                <td>0.73</td>
-                            </tr>
-                            <tr>
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td>✗</td>
-                                <td>✗</td>
-                                <td>3.34 <span class="improvement-tag">+0.38</span></td>
-                                <td>0.75</td>
-                            </tr>
-                            <tr>
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td>✗</td>
-                                <td>3.87 <span class="improvement-tag">+0.53</span></td>
-                                <td>0.80</td>
-                            </tr>
-                            <tr class="highlight-row">
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td>✓</td>
-                                <td><strong>4.25</strong> <span class="improvement-tag">+0.38</span></td>
-                                <td><strong>0.99</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="dek-card fade-in">
+                    <h4><i class="fa-solid fa-arrow-down"></i> Low-Level Enhancement</h4>
+                    <ul>
+                        <li><strong>STE Gradient Flow:</strong> Straight-Through Estimator for end-to-end differentiable optimization.</li>
+                        <li><strong>LoRA Fine-tuning:</strong> Efficient parameter updates with minimal overhead.</li>
+                        <li><strong>Gradient Approximation:</strong> ∇<sub>φ</sub>J ≈ -(PA - b) · ∇<sub>φ</sub>log p<sub>φ</sub>(c|prompt)</li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="section-divider"></div>
-
-        <!-- Algorithm -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>⚙️ Training Algorithm</h3>
+    <!-- Results Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Experiments</span>
+                <h2 class="section-title">Results</h2>
+            </div>
+            <div class="results-section fade-in">
+                <div class="results-tabs">
+                    <button class="tab-btn active" onclick="showTable('csi')">CSI100 (China)</button>
+                    <button class="tab-btn" onclick="showTable('nasdaq')">NASDAQ100 (US)</button>
+                    <button class="tab-btn" onclick="showTable('ablation')">Ablation Study</button>
                 </div>
-                <div class="algorithm-box">
-<pre><strong>Algorithm: SE-RL Training Scheme</strong>
 
-<span style="color: #888;">Input:</span> Base LLM M, Execution Agent π_init, Static Env E_s, Dynamic Env E_d
-<span style="color: #888;">Output:</span> Optimized Policy π*
+                <div id="csi-table" class="table-container">
+                    <div class="results-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>PA (bps) ↑</th>
+                                    <th>PA-std ↓</th>
+                                    <th>Win Rate ↑</th>
+                                    <th>GLR ↑</th>
+                                    <th>AFI ↓</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TWAP</td>
+                                    <td>-0.12</td>
+                                    <td><strong>3.12</strong></td>
+                                    <td>0.49</td>
+                                    <td>0.97</td>
+                                    <td>0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>VWAP</td>
+                                    <td>-3.29</td>
+                                    <td>4.87</td>
+                                    <td>0.39</td>
+                                    <td>0.78</td>
+                                    <td>0.04</td>
+                                </tr>
+                                <tr>
+                                    <td>PPO</td>
+                                    <td>-0.98</td>
+                                    <td>7.01</td>
+                                    <td>0.52</td>
+                                    <td>0.92</td>
+                                    <td>0.03</td>
+                                </tr>
+                                <tr>
+                                    <td>HALOP</td>
+                                    <td>2.89</td>
+                                    <td>6.12</td>
+                                    <td>0.65</td>
+                                    <td>1.12</td>
+                                    <td>0.07</td>
+                                </tr>
+                                <tr>
+                                    <td>MacMic</td>
+                                    <td>3.31</td>
+                                    <td>6.23</td>
+                                    <td>0.72</td>
+                                    <td>1.37</td>
+                                    <td>0.02</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td><strong>SE-RL (Ours)</strong></td>
+                                    <td><strong>4.25</strong><span class="improvement">+0.94</span></td>
+                                    <td><strong>5.12</strong><span class="improvement">-1.11</span></td>
+                                    <td><strong>0.99</strong><span class="improvement">+0.27</span></td>
+                                    <td><strong>1.63</strong><span class="improvement">+0.26</span></td>
+                                    <td><strong>0.00</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-1: Initialize algorithm population P ← ∅, performance buffer B ← ∅
-2: <span style="color: #e94560;"><strong>while</strong></span> not converged <span style="color: #e94560;"><strong>do</strong></span>
-3:     <span style="color: #667eea;">// Step 1: Design and Generate RL Algorithm</span>
-4:     Generate A_j ← M(Prompt, P)
+                <div id="nasdaq-table" class="table-container" style="display: none;">
+                    <div class="results-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>PA (bps) ↑</th>
+                                    <th>PA-std ↓</th>
+                                    <th>Win Rate ↑</th>
+                                    <th>GLR ↑</th>
+                                    <th>AFI ↓</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TWAP</td>
+                                    <td>-0.19</td>
+                                    <td>4.31</td>
+                                    <td>0.49</td>
+                                    <td>1.01</td>
+                                    <td>0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>PPO</td>
+                                    <td>-1.20</td>
+                                    <td>6.79</td>
+                                    <td>0.46</td>
+                                    <td>0.96</td>
+                                    <td>0.04</td>
+                                </tr>
+                                <tr>
+                                    <td>MacMic</td>
+                                    <td>3.14</td>
+                                    <td>5.69</td>
+                                    <td>0.74</td>
+                                    <td>1.28</td>
+                                    <td>0.01</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td><strong>SE-RL (Ours)</strong></td>
+                                    <td><strong>4.86</strong><span class="improvement">+1.72</span></td>
+                                    <td><strong>3.97</strong><span class="improvement">-1.72</span></td>
+                                    <td><strong>0.90</strong><span class="improvement">+0.16</span></td>
+                                    <td><strong>1.47</strong><span class="improvement">+0.19</span></td>
+                                    <td><strong>0.00</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="ablation-table" class="table-container" style="display: none;">
+                    <div class="results-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>High-Level</th>
+                                    <th>Low-Level</th>
+                                    <th>Dynamic Env</th>
+                                    <th>Hybrid Training</th>
+                                    <th>PA (bps) ↑</th>
+                                    <th>Win Rate ↑</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>2.26</td>
+                                    <td>0.65</td>
+                                </tr>
+                                <tr>
+                                    <td>✓</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>2.96<span class="improvement">+0.70</span></td>
+                                    <td>0.73</td>
+                                </tr>
+                                <tr>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>3.34<span class="improvement">+0.38</span></td>
+                                    <td>0.75</td>
+                                </tr>
+                                <tr>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✗</td>
+                                    <td>3.87<span class="improvement">+0.53</span></td>
+                                    <td>0.80</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td><strong>4.25</strong><span class="improvement">+0.38</span></td>
+                                    <td><strong>0.99</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithm Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Implementation</span>
+                <h2 class="section-title">Training Algorithm</h2>
+            </div>
+            <div class="algorithm-box fade-in">
+                <div class="algorithm-header">
+                    <div class="window-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    Algorithm: SE-RL Training Scheme
+                </div>
+                <div class="algorithm-code">
+<span class="comment">Input:</span> Base LLM <span class="variable">M</span>, Execution Agent <span class="variable">π_init</span>, Static Env <span class="variable">E_s</span>, Dynamic Env <span class="variable">E_d</span>
+<span class="comment">Output:</span> Optimized Policy <span class="variable">π*</span>
+
+1: Initialize algorithm population <span class="variable">P</span> ← ∅, performance buffer <span class="variable">B</span> ← ∅
+2: <span class="keyword">while</span> not converged <span class="keyword">do</span>
+3:     <span class="comment">// Step 1: Design and Generate RL Algorithm</span>
+4:     Generate <span class="variable">A_j</span> ← <span class="function">M</span>(Prompt, P)
 5:     
-6:     <span style="color: #667eea;">// Step 2: Inner Loop Training</span>
-7:     π_j ← Train(π_init, A_j, E_s)        <span style="color: #888;">// Train in static env</span>
-8:     π_j ← Train(π_j, A_j, E_d)           <span style="color: #888;">// Train in dynamic env</span>
-9:     Update π_j by minimizing L_rebalance = αL_s + βL_d
+6:     <span class="comment">// Step 2: Inner Loop Training</span>
+7:     <span class="variable">π_j</span> ← <span class="function">Train</span>(<span class="variable">π_init</span>, <span class="variable">A_j</span>, <span class="variable">E_s</span>)        <span class="comment">// Train in static env</span>
+8:     <span class="variable">π_j</span> ← <span class="function">Train</span>(<span class="variable">π_j</span>, <span class="variable">A_j</span>, <span class="variable">E_d</span>)           <span class="comment">// Train in dynamic env</span>
+9:     Update <span class="variable">π_j</span> by minimizing <span class="variable">L_rebalance</span> = α<span class="variable">L_s</span> + β<span class="variable">L_d</span>
 10:    
-11:    <span style="color: #667eea;">// Step 3: Dual-Level Enhance LLM</span>
-12:    Calculate L_LLM based on PA_j
-13:    ∇_M ← STE(L_LLM)
-14:    Update M's weights using ∇_M
-15: <span style="color: #e94560;"><strong>end while</strong></span>
-16: <span style="color: #e94560;"><strong>return</strong></span> π*</pre>
+11:    <span class="comment">// Step 3: Dual-Level Enhance LLM</span>
+12:    Calculate <span class="variable">L_LLM</span> based on <span class="variable">PA_j</span>
+13:    <span class="variable">∇_M</span> ← <span class="function">STE</span>(<span class="variable">L_LLM</span>)
+14:    Update <span class="variable">M</span>'s weights using <span class="variable">∇_M</span>
+15: <span class="keyword">end while</span>
+16: <span class="keyword">return</span> <span class="variable">π*</span>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="section-divider"></div>
-
-        <!-- Citation -->
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="section-title-wrapper">
-                    <h3>📝 Citation</h3>
+    <!-- Citation Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Reference</span>
+                <h2 class="section-title">Citation</h2>
+            </div>
+            <div class="citation-box fade-in">
+                <div class="citation-header">
+                    <span>BibTeX</span>
+                    <button class="copy-btn" onclick="copyBibtex()">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
                 </div>
-                <div class="bibtex-box">
-@inproceedings{anonymous2026serl,
+                <div class="citation-code" id="bibtex">@inproceedings{anonymous2026serl,
     title={Large Language Model (LLM) as an Excellent Reinforcement 
            Learning Researcher in both Single-Agent and Multi-Agent Scenarios},
     author={Anonymous},
@@ -781,15 +1215,49 @@
 }</div>
             </div>
         </div>
+    </section>
 
-        <div class="section-divider"></div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 SE-RL Project · Last updated: February 2026</p>
+    </footer>
 
-        <!-- Footer -->
-        <div style="padding: 30px 0; text-align: center;">
-            <p style="color: #999; font-size: 0.9em;">
-                © 2026 SE-RL Project | Last updated: February 2026
-            </p>
-        </div>
-    </div>
+    <script>
+        // Tab switching
+        function showTable(tableId) {
+            document.querySelectorAll('.table-container').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tableId + '-table').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // Copy bibtex
+        function copyBibtex() {
+            const text = document.getElementById('bibtex').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                }, 2000);
+            });
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
